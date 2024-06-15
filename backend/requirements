@@ -1,0 +1,5 @@
+django-rest-framework
+ Django
+ Pillow
+ djangorestframework-simplejwt
+ python-dotenv
