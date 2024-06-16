@@ -5,6 +5,12 @@ from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from .emails import Util
 
+
+class VerifyOtpSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp_code = serializers.CharField(max_length=6)
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     # we are writing this because we need to confirm password filed in our registration request
     #this doesnot include the password2 in response object
@@ -30,7 +36,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**data)
 
 
-class VerifyAccountSerializer(serializers.Serializer):
+class VerifyRegistrationOtpSerializer(serializers.Serializer):
     email=serializers.EmailField()
     otp=serializers.CharField()
     
@@ -115,3 +121,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
         except DjangoUnicodeDecodeError as identifier:
             PasswordResetTokenGenerator().check_token(user,token)
             raise serializers.ValidationError("Token is not valid or expired")
+
+
+class OtpSerializer(serializers.Serializer):
+    email=serializers.EmailField()

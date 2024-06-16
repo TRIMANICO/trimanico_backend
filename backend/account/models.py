@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser,PermissionsMixin
-
-
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.conf import settings
+from django.utils import timezone
+import datetime
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -41,7 +42,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_verified=models.BooleanField(default=False)
-    otp=models.CharField(max_length=6,null=True,blank=True)
+    # otp=models.CharField(max_length=6,null=True,blank=True)
    
 
     created_at=models.DateTimeField(auto_now_add=True)
@@ -77,3 +78,26 @@ class User(AbstractBaseUser):
     
 
     
+
+
+
+
+
+
+class OTP(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    otp_code = models.CharField(max_length=6)
+    generated_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = self.generated_at + datetime.timedelta(minutes=10)  # OTP valid for 5 minutes
+        super().save(*args, **kwargs)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def __str__(self):
+        return f"OTP for {self.user.email}: {self.otp_code}"

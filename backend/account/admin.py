@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User,OTP
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Register your models here.
@@ -11,7 +11,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
         ("Personal info", {"fields": ["first_name","middle_name","last_name","gender","address","phone_number"]}),
-        ("Permissions", {"fields": ["is_admin","is_active","is_verified","otp"]}),
+        ("Permissions", {"fields": ["is_admin","is_active","is_verified"]}),
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -29,3 +29,4 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = []
 
 admin.site.register(User,UserAdmin)
+admin.site.register(OTP)
