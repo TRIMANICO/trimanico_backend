@@ -1,6 +1,6 @@
 import random
 from django.utils import timezone
-from .models import OTP
+from account.models import OTP
 
 def generate_otp(user):
     otp_code = str(random.randint(100000, 999999))
@@ -21,7 +21,7 @@ def verify_otp(user, otp_code):
     if otp.is_expired():
         return False
 
-    otp.used = True
-    otp.is_expired=True
+ 
+  
     otp.save()
     return True

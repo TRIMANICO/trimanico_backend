@@ -95,9 +95,20 @@ class OTP(models.Model):
         if not self.expires_at:
             self.expires_at = self.generated_at + datetime.timedelta(minutes=10)  # OTP valid for 5 minutes
         super().save(*args, **kwargs)
-
+    
     def is_expired(self):
         return timezone.now() > self.expires_at
 
     def __str__(self):
         return f"OTP for {self.user.email}: {self.otp_code}"
+
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def is_expired(self):
+        return False
+        # return self.created_at < timezone.now() - datetime.timedelta(minutes=10)
+    def __str__(self):
+        return f"{self.user.email}---{self.token}"
