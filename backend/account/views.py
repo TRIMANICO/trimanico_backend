@@ -135,11 +135,10 @@ class VerifyPasswordResetOtpView(APIView):
          try:
             user=User.objects.get(email=serializer.validated_data.get('email'))
             if verify_otp(user,otp):
-               print(user.id)
-               print(type(user.id))
                encrypted_token = encrypt_message(str(user.id), load_public_key())
-               print(type(encrypted_token))
                PasswordResetToken.objects.create(user=user, token=encrypted_token)
+               otp= OTP.objects.get(user=user,otp_code=otp,used=False)
+               otp.used=True
                return Response({"message": "OTP is valid.", "token": encrypted_token}, status=status.HTTP_200_OK)
             else:
                return Response({"errors":{"otp":["invalid otp"]}})
