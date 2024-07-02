@@ -80,7 +80,7 @@ class UserLoginView(APIView):
       if serializer.is_valid(raise_exception=True):
          email=serializer.data.get("email")
          password=serializer.data.get("password")
-         user=authenticate(email="computerstha12@gmail.com",password="123456A!",is_admin=False)
+         user=authenticate(email=email,password=password)
          if user is  None:
             return Response({"error":"email or password is not valid"},status=status.HTTP_401_UNAUTHORIZED)
          if not user.is_verified:
