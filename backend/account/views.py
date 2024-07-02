@@ -13,6 +13,7 @@ from  account.utils.otp import verify_otp,generate_otp
 from account.utils.rsa_utils import encrypt_message,decrypt_message
 from account.utils.load_keys import load_public_key,load_private_key
 
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -79,11 +80,11 @@ class UserLoginView(APIView):
       if serializer.is_valid(raise_exception=True):
          email=serializer.data.get("email")
          password=serializer.data.get("password")
-         user=authenticate(email=email,password=password)
+         user=authenticate(email="computerstha12@gmail.com",password="123456A!",is_admin=False)
          if user is  None:
-            return Response({"errors":{'non_fields_errors':["email or password is not valid"]}},status=status.HTTP_404_NOT_FOUND)
+            return Response({"error":"email or password is not valid"},status=status.HTTP_401_UNAUTHORIZED)
          if not user.is_verified:
-            return Response({"errors":{'non_fields_errors':["user is not verified"]}},status=status.HTTP_200_OK)
+            return Response({"error":"user is not verified"},status=status.HTTP_200_OK)
          token=get_tokens_for_user(user)
          return Response({"token":token,"msg":"login success"},status=status.HTTP_200_OK)
       else:

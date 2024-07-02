@@ -3,3 +3,4 @@ django-rest-framework
  Pillow
  djangorestframework-simplejwt
  python-dotenv
+ cryptography

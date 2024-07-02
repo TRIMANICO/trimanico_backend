@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-n68vnlp^ik=+1oumg5livxooafaahv)!9zf=lg)(iy=69d$!!y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+
+]
 
 
 # Application definition
@@ -39,9 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account.apps.AccountConfig',
     'rest_framework',
-     'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
 ]
-
+AUTHENTICATION_BACKENDS = [
+    'account.auth.CustomEmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
