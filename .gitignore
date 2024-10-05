@@ -1,0 +1,16 @@
+# Ignore Python compiled files
+*.pyc
+__pycache__/
+
+# Ignore environment variables and keys
+.env
+*.pem
+
+# Ignore database files
+*.sqlite3
+
+# Ignore build files
+build/
+#ignore .csh file
+*.csh
+
