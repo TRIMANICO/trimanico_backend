@@ -14,19 +14,31 @@ from account.utils.rsa_utils import encrypt_message,decrypt_message
 from account.utils.load_keys import load_public_key,load_private_key
 
 from django.contrib.auth.hashers import make_password
-
+from rest_framework.permissions import IsAdminUser
 
 
 # Create your views here.
-
-
-#creating token manually
+ 
+ #new one
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
+    refresh['is_superuser'] = user.is_superuser  # Add custom claim for superuser
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
+
+
+
+#old one
+#creating token manually
+# def get_tokens_for_user(user):
+#     refresh = RefreshToken.for_user(user)
+#     return {
+#         'refresh': str(refresh),
+#         'access': str(refresh.access_token),
+#     }
 
 class UserRegistrationView(APIView):
     renderer_classes=[UserRenderer]
@@ -186,9 +198,12 @@ class UserPasswordResetView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
           
                 
-            
+class AdminOnlyView(APIView):
+    permission_classes = [IsAdminUser]
 
-           
+    def get(self, request):
+        # Only superuser access
+        return Response({'message': 'Admin-only content'})
                
                
               
